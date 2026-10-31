@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100d18">
+<title>IDV ANALYST — Personal Match Archive</title>
+<style>
+:root{--bg:#101113;--panel:#1b1c1f;--panel2:#292a2e;--line:#414348;--purple:#aeb2ba;--purple2:#777d87;--pink:#f0f1f3;--text:#f1f1f2;--muted:#a5a7ac;--green:#a9cbb8;--red:#d9aab0;--gold:#d7c49a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% -10%,#34363b 0,transparent 40%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.shell{max-width:1180px;margin:auto;padding:22px 18px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:12px}.sigil{width:44px;height:44px;border:1px solid var(--purple);border-radius:13px;display:grid;place-items:center;color:var(--pink);font-family:Georgia;font-size:25px;box-shadow:0 0 24px #c5c8ce22}
+h1{font:600 19px Georgia,serif;letter-spacing:2px;margin:0}.sub{font-size:10px;color:var(--muted);letter-spacing:2px}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 13px;border-radius:10px}.btn:hover{border-color:var(--purple);background:#35373c}.btn.primary{background:linear-gradient(135deg,#555960,#34363b);border-color:#92969e}.btn.danger{color:#f2b4c0}
+nav{display:flex;gap:7px;overflow:auto;padding:5px 0 15px;margin-bottom:8px}
+nav button{white-space:nowrap;border:1px solid transparent;color:var(--muted);background:transparent;padding:9px 13px;border-radius:10px}
+nav button.active{color:var(--text);background:#303136;border-color:#777d87}
+main{min-height:65vh}.page{display:none}.page.active{display:block}
+.eyebrow{color:var(--pink);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+h2{font:600 25px Georgia,serif;margin:4px 0 15px}h3{font-size:15px;margin:0 0 12px}
+.grid{display:grid;gap:13px}.stats{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:1.2fr .8fr}.three{grid-template-columns:repeat(3,1fr)}
+.card{background:linear-gradient(145deg,#202124,#17181a);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 35px #0002}
+.metric{font:600 27px Georgia,serif;margin-top:4px}.muted{color:var(--muted)}.small{font-size:12px}.accent{color:var(--pink)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+label{display:block;color:#c9bed5;font-size:12px;margin-bottom:5px}
+input,select,textarea{width:100%;background:#121315;border:1px solid #453653;color:var(--text);border-radius:9px;padding:10px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--purple);box-shadow:0 0 0 2px #a879e822}
+textarea{min-height:88px;resize:vertical}.field{margin-bottom:12px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}.full{grid-column:1/-1}
+fieldset{border:1px solid var(--line);border-radius:12px;padding:13px;margin:0 0 14px}legend{color:var(--pink);padding:0 7px;font:14px Georgia,serif}
+.pills{display:flex;gap:7px;flex-wrap:wrap}.pill{border:1px solid #51405f;border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px;background:#202124}.pill.on{background:#45474d;color:#fff;border-color:#aeb2ba}
+.list{display:grid;gap:9px}.match{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#1c1d20}.match strong{display:block}.tag{font-size:11px;padding:3px 8px;border-radius:20px;background:#34363b;color:var(--pink)}.win{color:var(--green)}.draw{color:var(--gold)}.loss{color:var(--red)}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed #51405f;border-radius:13px}
+.barrow{display:grid;grid-template-columns:130px 1fr 35px;align-items:center;gap:9px;margin:10px 0;font-size:12px}.bar{height:8px;background:#35373c;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#777d87,#d5d7dc);border-radius:9px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.section-note{border-left:2px solid var(--purple);padding:8px 12px;color:var(--muted);font-size:12px;margin:12px 0}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+footer{margin-top:35px;color:#85878d;font-size:11px;text-align:center}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}.shell{padding:16px 12px 45px}.metric{font-size:24px}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}header{align-items:flex-start}.header-actions .btn{padding:8px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+ <div class="brand"><div class="sigil">Ⅴ</div><div><h1>IDV ANALYST</h1><div class="sub">PERSONAL MATCH ARCHIVE</div></div></div>
+ <div class="header-actions"><button class="btn" id="exportBtn">データを書き出す</button><button class="btn" id="importBtn">復元</button><input type="file" id="importFile" accept="application/json" hidden></div>
+</header>
+<nav id="nav">
+ <button class="active" data-page="dashboard">⌂ ダッシュボード</button>
+ <button data-page="record">＋ 試合を記録</button>
+ <button data-page="history">▤ 試合一覧</button>
+ <button data-page="analytics">◇ 分析</button>
+ <button data-page="goals">✧ 目標</button>
+</nav>
+<main>
+<section class="page active" id="dashboard">
+ <div class="eyebrow">THE ARCHIVE</div><h2>戦績ダッシュボード</h2>
+ <div class="grid stats">
+  <div class="card"><div class="muted small">総試合数</div><div class="metric" id="total">0</div><div class="small muted">記録済みの試合</div></div>
+  <div class="card"><div class="muted small">勝率</div><div class="metric" id="winrate">—</div><div class="small muted">勝利 ÷ 全試合</div></div>
+  <div class="card"><div class="muted small">サバイバー</div><div class="metric" id="survCount">0</div><div class="small muted">記録数</div></div>
+  <div class="card"><div class="muted small">ハンター</div><div class="metric" id="huntCount">0</div><div class="small muted">記録数</div></div>
+ </div>
+ <div class="grid two" style="margin-top:14px">
+  <div class="card"><h3>最近の試合</h3><div id="recent" class="list"></div></div>
+  <div class="card"><h3>現在の重点課題</h3><div id="dashGoals"></div><div class="section-note">反省点は責めるためではなく、次の試合で試すことを見つけるための記録。</div></div>
+ </div>
+</section>
+<section class="page" id="record">
+ <div class="eyebrow">MATCH ENTRY</div><h2 id="formTitle">新しい試合を記録</h2>
+ <form id="matchForm">
+ <input type="hidden" id="editId">
+ <fieldset><legend>01 / 基本情報</legend><div class="formgrid">
+  <div class="field"><label>対戦日時</label><input type="datetime-local" id="date"></div>
+  <div class="field"><label>陣営</label><select id="faction"><option>サバイバー</option><option>ハンター</option></select></div>
+  <div class="field"><label>使用キャラクター</label><input id="character" list="characters" placeholder="例：幻灯師 / 漁師"><datalist id="characters"><option>幻灯師</option><option>囚人</option><option>墓守</option><option>画家</option><option>ポストマン</option><option>踊り子</option><option>漁師</option><option>蝋人形師</option><option>隠者</option></datalist></div>
+  <div class="field"><label>マップ</label><input id="map" placeholder="例：軍需工場"></div>
+  <div class="field"><label>試合結果</label><select id="result"><option>勝利</option><option>引き分け</option><option>敗北</option></select></div>
+  <div class="field"><label>相手キャラクター（任意）</label><input id="opponent" placeholder="ハンター / サバイバー"></div>
+  <div class="field"><label>ランク・モード</label><select id="mode"><option>ランク戦</option><option>マルチ戦</option><option>カスタム</option><option>その他</option></select></div>
+  <div class="field"><label>チェイス時間（秒・任意）</label><input id="chase" type="number" min="0" placeholder="例：90"></div>
+ </div></fieldset>
+ <fieldset><legend>02 / 試合内容</legend><div id="survivorFields" class="formgrid">
+  <div class="field"><label>ファーストチェイス</label><select id="firstChase"><option value="">未記録</option><option>自分が担当</option><option>味方が担当</option><option>早期ダウン</option><option>牽制成功</option><option>その他</option></select></div>
+  <div class="field"><label>救助回数</label><input id="rescues" type="number" min="0" max="10" placeholder="0"></div>
+  <div class="field"><label>解読への貢献</label><select id="decode"><option value="">未記録</option><option>高い</option><option>普通</option><option>低い</option><option>ほぼできなかった</option></select></div>
+  <div class="field"><label>チェイス・救助後の役割</label><select id="roleplay"><option value="">未記録</option><option>チェイス継続</option><option>タゲチェン対応</option><option>救助担当</option><option>解読専念</option><option>立て直し補助</option></select></div>
+ </div><div id="hunterFields" class="formgrid" hidden>
+  <div class="field"><label>ファーストダウンまで（秒）</label><input id="firstDown" type="number" min="0" placeholder="例：55"></div>
+  <div class="field"><label>脱落者数</label><input id="eliminations" type="number" min="0" max="4" placeholder="0〜4"></div>
+  <div class="field"><label>試合運び</label><select id="control"><option value="">未記録</option><option>主導権を維持</option><option>中盤から巻き返し</option><option>相手に主導権を握られた</option><option>終盤判断が課題</option></select></div>
+  <div class="field"><label>補助特質</label><input id="trait" placeholder="例：瞬間移動"></div>
+ </div>
+ <div class="field"><label>試合展開・状況メモ</label><textarea id="situation" placeholder="何が起きた？どの場面で流れが変わった？"></textarea></div>
+ </fieldset>
+ <fieldset><legend>03 / プレイ評価</legend>
+  <div class="formgrid">
+   <div class="field"><label>判断力（1〜5）</label><select id="judgment"><option value="">未評価</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+   <div class="field"><label>操作精度（1〜5）</label><select id="mechanics"><option value="">未評価</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+   <div class="field"><label>状況把握（1〜5）</label><select id="awareness"><option value="">未評価</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+   <div class="field"><label>冷静さ（1〜5）</label><select id="calm"><option value="">未評価</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+  </div>
+  <div class="field"><label>良かった点</label><textarea id="good" placeholder="成功した判断、うまくいった立ち回り、再現したい行動"></textarea></div>
+  <div class="field"><label>反省点・判断ミス</label><textarea id="bad" placeholder="何をミスした？その原因は？"></textarea></div>
+ </fieldset>
+ <fieldset><legend>04 / 課題タグ</legend><div class="small muted" style="margin-bottom:9px">当てはまる項目を複数選択。分析画面で集計するよ。</div><div id="issueTags" class="pills"></div></fieldset>
+ <fieldset><legend>05 / 次回への引き継ぎ</legend>
+  <div class="field"><label>次回試すこと</label><textarea id="next" placeholder="次の試合で意識することを具体的に"></textarea></div>
+  <div class="field"><label>自分へのメモ・気づき</label><textarea id="memo" placeholder="自由記述"></textarea></div>
+ </fieldset>
+ <div class="actions"><button class="btn primary" type="submit">記録を保存</button><button class="btn" type="button" id="clearForm">入力をクリア</button></div>
+ </form>
+</section>
+<section class="page" id="history">
+ <div class="eyebrow">MATCH LOG</div><h2>試合アーカイブ</h2>
+ <div class="toolbar"><div class="pills" id="historyFilters"><button class="pill on" data-filter="すべて">すべて</button><button class="pill" data-filter="サバイバー">サバイバー</button><button class="pill" data-filter="ハンター">ハンター</button></div><input id="search" style="max-width:230px" placeholder="キャラ・マップで検索"></div>
+ <div id="historyList" class="list"></div>
+</section>
+<section class="page" id="analytics">
+ <div class="eyebrow">PERFORMANCE STUDY</div><h2>プレイ分析</h2>
+ <div class="grid stats">
+  <div class="card"><div class="muted small">勝利</div><div class="metric win" id="wins">0</div></div>
+  <div class="card"><div class="muted small">引き分け</div><div class="metric" id="draws">0</div></div>
+  <div class="card"><div class="muted small">敗北</div><div class="metric loss" id="losses">0</div></div>
+  <div class="card"><div class="muted small">平均チェイス時間</div><div class="metric" id="avgChase">—</div></div>
+ </div>
+ <div class="grid two" style="margin-top:14px">
+  <div class="card"><h3>陣営別の勝率</h3><div id="factionStats"></div></div>
+  <div class="card"><h3>課題タグの出現回数</h3><div id="issueStats"></div></div>
+ </div>
+ <div class="grid two" style="margin-top:14px">
+  <div class="card"><h3>キャラクター別の記録</h3><div id="characterStats"></div></div>
+  <div class="card"><h3>自己評価の平均</h3><div id="ratingStats"></div></div>
+ </div>
+ <p class="section-note">分析は保存された試合記録だけを対象に計算するよ。記録数が少ないうちは傾向の目安として見てね。</p>
+</section>
+<section class="page" id="goals">
+ <div class="eyebrow">NEXT OBJECTIVE</div><h2>目標管理</h2>
+ <div class="card" style="margin-bottom:14px"><form id="goalForm"><div class="formgrid">
+  <div class="field"><label>目標</label><input id="goalText" required placeholder="例：幻灯師のファーチェ判断を安定させる"></div>
+  <div class="field"><label>対象陣営</label><select id="goalFaction"><option>両方</option><option>サバイバー</option><option>ハンター</option></select></div>
+  <div class="field"><label>期限（任意）</label><input id="goalDue" type="date"></div>
+  <div class="field"><label>優先度</label><select id="goalPriority"><option>高</option><option selected>中</option><option>低</option></select></div>
+ </div><button class="btn primary" type="submit">目標を追加</button></form></div>
+ <div id="goalList" class="list"></div>
+</section>
+</main>
+<footer>IDV ANALYST · YOUR MATCHES, YOUR PROGRESS<br>このアプリの記録はこのブラウザ内に保存されるよ。定期的にデータを書き出してね。</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const STORE='idv_analyst_v1';
+let state=load(), currentFilter='すべて';
+const issues=['ファーストチェイス','セカンドチェイス','強ポジ判断','板・窓操作','アイテム管理','救助判断','救助後の立ち回り','解読管理','暗号機守り','索敵','スキル精度','瞬間判断','終盤判断','味方との連携','マップ理解','焦り・操作ミス'];
+function load(){try{return JSON.parse(localStorage.getItem(STORE))||{matches:[],goals:[]}}catch(e){return{matches:[],goals:[]}}}
+function save(){localStorage.setItem(STORE,JSON.stringify(state));renderAll()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function dateNow(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
+function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===p));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='record'&&!$('editId').value)$('date').value=dateNow()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+issues.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='pill';b.textContent=t;b.dataset.issue=t;b.onclick=()=>b.classList.toggle('on');$('issueTags').append(b)});
+$('faction').onchange=()=>{const surv=$('faction').value==='サバイバー';$('survivorFields').hidden=!surv;$('hunterFields').hidden=surv};
+function val(id){return $(id).value}
+function set(id,v){$(id).value=v??''}
+const common=['date','faction','character','map','result','opponent','mode','chase','situation','judgment','mechanics','awareness','calm','good','bad','next','memo'];
+const survIds=['firstChase','rescues','decode','roleplay'], huntIds=['firstDown','eliminations','control','trait'];
+$('matchForm').onsubmit=e=>{e.preventDefault();const id=val('editId')||String(Date.now());let item={id};[...common,...survIds,...huntIds].forEach(k=>item[k]=val(k));item.issues=[...document.querySelectorAll('[data-issue].on')].map(x=>x.dataset.issue);const i=state.matches.findIndex(x=>x.id===id);if(i>=0)state.matches[i]=item;else state.matches.unshift(item);save();resetForm();showPage('history')};
+function resetForm(){ $('matchForm').reset();set('editId','');$('formTitle').textContent='新しい試合を記録';document.querySelectorAll('[data-issue]').forEach(x=>x.classList.remove('on'));$('faction').onchange();$('date').value=dateNow()}
+$('clearForm').onclick=resetForm;
+function editMatch(id){const m=state.matches.find(x=>x.id===id);if(!m)return;showPage('record');set('editId',id);$('formTitle').textContent='試合記録を編集';[...common,...survIds,...huntIds].forEach(k=>set(k,m[k]));$('faction').onchange();document.querySelectorAll('[data-issue]').forEach(x=>x.classList.toggle('on',(m.issues||[]).includes(x.dataset.issue)))}
+function deleteMatch(id){if(confirm('この試合記録を削除する？')){state.matches=state.matches.filter(x=>x.id!==id);save()}}
+function outcomeClass(r){return r==='勝利'?'win':r==='敗北'?'loss':'draw'}
+function matchHTML(m){return `<div class="match"><div><strong>${esc(m.character||'キャラ未入力')} <span class="tag">${esc(m.faction)}</span></strong><div class="small muted">${esc(m.date?.replace('T',' ')||'日時未入力')} · ${esc(m.map||'マップ未入力')} · ${esc(m.mode||'')}</div><div class="small ${outcomeClass(m.result)}">${esc(m.result)}${m.chase?` · ${esc(m.chase)}秒`:''}</div></div><div class="actions"><button class="btn" onclick="editMatch('${m.id}')">編集</button><button class="btn danger" onclick="deleteMatch('${m.id}')">削除</button></div></div>`}
+function renderDashboard(){const ms=state.matches,n=ms.length,w=ms.filter(m=>m.result==='勝利').length;$('total').textContent=n;$('winrate').textContent=n?Math.round(w/n*100)+'%':'—';$('survCount').textContent=ms.filter(m=>m.faction==='サバイバー').length;$('huntCount').textContent=ms.filter(m=>m.faction==='ハンター').length;$('recent').innerHTML=ms.length?ms.slice(0,5).map(matchHTML).join(''):'<div class="empty">まだ試合記録がないよ。最初の1試合を記録しよう。</div>';const active=state.goals.filter(g=>!g.done);$('dashGoals').innerHTML=active.length?active.slice(0,4).map(g=>`<div style="padding:8px 0;border-bottom:1px solid var(--line)"><span class="tag">${esc(g.faction)}</span> ${esc(g.text)}</div>`).join(''):'<div class="muted small">目標を追加すると、ここに表示されるよ。</div>'}
+function renderHistory(){const q=$('search').value.toLowerCase();const ms=state.matches.filter(m=>(currentFilter==='すべて'||m.faction===currentFilter)&&[m.character,m.map,m.opponent].join(' ').toLowerCase().includes(q));$('historyList').innerHTML=ms.length?ms.map(matchHTML).join(''):'<div class="empty">該当する記録がないよ。</div>'}
+$('historyFilters').onclick=e=>{const b=e.target.closest('[data-filter]');if(!b)return;currentFilter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('on',x===b));renderHistory()};$('search').oninput=renderHistory;
+function bar(label,count,max){return `<div class="barrow"><span>${esc(label)}</span><div class="bar"><i style="width:${max?count/max*100:0}%"></i></div><b>${count}</b></div>`}
+function renderAnalytics(){const ms=state.matches;$('wins').textContent=ms.filter(m=>m.result==='勝利').length;$('draws').textContent=ms.filter(m=>m.result==='引き分け').length;$('losses').textContent=ms.filter(m=>m.result==='敗北').length;const ch=ms.map(m=>Number(m.chase)).filter(x=>x>0);$('avgChase').textContent=ch.length?Math.round(ch.reduce((a,b)=>a+b,0)/ch.length)+'秒':'—';
+$('factionStats').innerHTML=['サバイバー','ハンター'].map(f=>{const a=ms.filter(m=>m.faction===f),w=a.filter(m=>m.result==='勝利').length;return `<div style="margin:12px 0"><b>${f}</b><span class="muted small"> · ${a.length}試合 / ${a.length?Math.round(w/a.length*100):0}%勝率</span>${bar('勝利',w,a.length||1)}</div>`}).join('');
+const counts={};ms.forEach(m=>(m.issues||[]).forEach(t=>counts[t]=(counts[t]||0)+1));const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);$('issueStats').innerHTML=sorted.length?sorted.map(([k,v])=>bar(k,v,sorted[0][1])).join(''):'<div class="muted small">課題タグの記録がまだないよ。</div>';
+const chars={};ms.forEach(m=>{if(!m.character)return;chars[m.character]??={n:0,w:0};chars[m.character].n++;if(m.result==='勝利')chars[m.character].w++});const cs=Object.entries(chars).sort((a,b)=>b[1].n-a[1]);$('characterStats').innerHTML=cs.length?cs.map(([k,v])=>`<div style="padding:8px 0;border-bottom:1px solid var(--line)"><b>${esc(k)}</b><span class="muted small"> · ${v.n}試合 / 勝率 ${Math.round(v.w/v.n*100)}%</span></div>`).join(''):'<div class="muted small">キャラクター記録がまだないよ。</div>';
+const keys=[['判断力','judgment'],['操作精度','mechanics'],['状況把握','awareness'],['冷静さ','calm']];$('ratingStats').innerHTML=keys.map(([k,id])=>{const a=ms.map(m=>Number(m[id])).filter(x=>x>0),avg=a.length?(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1):'—';return `<div style="margin:12px 0"><b>${k}</b><span class="muted small"> · ${avg} / 5（${a.length}件）</span>${bar('平均評価',avg==='—'?0:Number(avg),5)}</div>`}).join('')}
+function renderGoals(){$('goalList').innerHTML=state.goals.length?state.goals.map(g=>`<div class="match"><div><strong style="${g.done?'text-decoration:line-through;color:var(--muted)':''}">${esc(g.text)}</strong><div class="small muted">${esc(g.faction)} · 優先度 ${esc(g.priority)} · ${g.due?'期限 '+esc(g.due):'期限なし'}</div></div><div class="actions"><button class="btn" onclick="toggleGoal('${g.id}')">${g.done?'未達成に戻す':'達成！'}</button><button class="btn danger" onclick="removeGoal('${g.id}')">削除</button></div></div>`).join(''):'<div class="empty">目標はまだ登録されていないよ。</div>'}
+$('goalForm').onsubmit=e=>{e.preventDefault();state.goals.unshift({id:String(Date.now()),text:val('goalText'),faction:val('goalFaction'),due:val('goalDue'),priority:val('goalPriority'),done:false});$('goalForm').reset();save()};
+function toggleGoal(id){const g=state.goals.find(x=>x.id===id);if(g)g.done=!g.done;save()}function removeGoal(id){state.goals=state.goals.filter(x=>x.id!==id);save()}
+function renderAll(){renderDashboard();renderHistory();renderAnalytics();renderGoals()}
+$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='idv-analyst-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href)};
+$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!Array.isArray(x.matches)||!Array.isArray(x.goals))throw Error();if(confirm('現在の記録を読み込んだデータで置き換える？')){state=x;save()}}catch(err){alert('読み込みに失敗したよ。IDV ANALYSTのJSONバックアップを選んでね。')}e.target.value=''};
+resetForm();renderAll();
+</script>
+</body></html>
